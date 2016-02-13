@@ -269,7 +269,21 @@ def sequence_decode(stream):
         stream = stream[length:]
         parsed_objectData = tagDecodeDict[tag](objectData)
         objects.append(parsed_objectData)
+        if tag in tagDecodeDict2Name:
+             objects.append(tagDecodeDict2Name[tag])
     return objects
+
+tagDecodeDict2Name = {
+    0x02: "INTEGER32",
+    0x04: "OCTETSTR",
+#    0x06: "OBJECTID",
+    0x40: "IPADDRESS",
+    0x41: "COUNTER32",
+    0x42: "GAUGE",
+    0x43: "TICKS",
+    0x44: "OPAQUE",
+    0x46: "COUNTER64",
+}
 
 tagDecodeDict = {
     0x02: integer_decode,
@@ -282,6 +296,8 @@ tagDecodeDict = {
     0x40: octetstring_decode,  # IPAddress,
     0x41: integer_decode,  # Counter
     0x42: integer_decode,  # Gauge
+    0x43: integer_decode,  # TimeTicks
+    0x44: octetstring_decode, # Opaque
     0x46: integer_decode,  # Counter64
     0x43: integer_decode,  # TimeTicks,
 
@@ -535,6 +551,6 @@ def msg_decode(stream):
     (length, stream) = length_decode(stream)
     objectData = stream[:length]
     stream = stream[length:]
-    snmp_ver, community, data = tagDecodeDict[tag](objectData)
-    req_id, error_status, error_index, varbinds = data
+    snmp_ver, snmp_ver_data_type, community, community_data_type, data = tagDecodeDict[tag](objectData)
+    req_id, t1, error_status, t2, error_index, t3, varbinds = data
     return req_id, error_status, error_index, varbinds

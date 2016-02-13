@@ -10,4 +10,5 @@ oid_group = {"1.3.6.1.2.1.2.2.1.2": "ifDescr",
 community = "public"
 snmp_data = snmp_poller.poller(hosts, (oid_group.keys(),), community)
 for d in snmp_data:
-    print ("host=%s oid=%s.%s value=%s" % (d[0], oid_group[d[1]], d[2], d[3]))
+    print (d)
+    #print ("host=%s oid=%s.%s value=%s" % (d[0], oid_group[d[1]], d[2], d[3]))

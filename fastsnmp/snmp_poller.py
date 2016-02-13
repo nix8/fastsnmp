@@ -144,7 +144,10 @@ def poller(hosts, oids_groups, community, check_timeout=10, check_retry=1):
                     except KeyError:
                         continue  # dup
                     interested_oids = True
-                    for oid, value in var_bind_list:
+                    for one_var in var_bind_list:
+                        value = one_var[1]
+                        oid = one_var[0]
+                        data_type = one_var[2] if len(one_var) == 3 else None
                         if value is None:
                             interested_oids = False
                             break
@@ -153,7 +156,7 @@ def poller(hosts, oids_groups, community, check_timeout=10, check_retry=1):
                             if oid.startswith(main_oid + '.'):
                                 found = True
                                 index_part = oid[len(main_oid) + 1:]
-                                yield (target_info[host_ip], main_oid, index_part, value)
+                                yield (target_info[host_ip], main_oid, index_part, value, data_type)
                                 break
                         if not found:
                             if DEBUG:
